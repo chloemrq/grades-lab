@@ -406,4 +406,41 @@ ggplot(final_grades, aes(x = factor(group), y = final_grade, fill = sex)) +
 ```
 We can observe here the variations within groups also including the effect of sex. There is little variation between women and men within groups and between groups. We do not observe a general trend of women scoring always higher than men or the reverse. 
 
+### Question 26
+```{r}
+courses_trimester <- courses |> select(`course name`, trimester)
+
+# Create a vector of courses per trimester
+trim1_courses <- intersect(courses$`course name`[courses$trimester == 1], colnames(grades_wide))
+trim2_courses <- intersect(courses$`course name`[courses$trimester == 2], colnames(grades_wide))
+trim3_courses <- intersect(courses$`course name`[courses$trimester == 3], colnames(grades_wide))
+
+# Compute pass/fail
+pass_df <- grades_wide |>
+  rowwise() |>
+  mutate(
+    final_grade = mean(c_across(-c(id, group)), na.rm = TRUE),
+    pass = min(c_across(-c(id, group)), na.rm = TRUE) >= 5 &          
+           mean(c_across(any_of(trim1_courses)), na.rm = TRUE) >= 10 &    
+           mean(c_across(any_of(trim2_courses)), na.rm = TRUE) >= 10 &    
+           mean(c_across(any_of(trim3_courses)), na.rm = TRUE) >= 10        
+  ) |>
+  ungroup() |>
+  select(id, group, final_grade, pass) |>
+  arrange(desc(final_grade))
+
+pass_df |> slice_head(n = 25) |> knitr::kable()
+
+```
+This is wrong but I'll still use it for the next questions. 
+
+### Question 27
+```{r}
+students_fail_high <- pass_df |>
+  filter(pass == FALSE, final_grade >= 10)
+
+num_fail_high <- nrow(students_fail_high)
+```
+
+cat("The number of students who do not pass yet have a final grade >= 10 is", num_fail_high, ".\n")
 
