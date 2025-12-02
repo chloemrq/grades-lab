@@ -96,5 +96,14 @@ students |>
       y = "Number of students"
     )
 ```
+### Question 8
+```{r}
+students |>
+  group_by(group) |>
+  summarise(
+    median_age = round(median(time_length(today() - birth_date, unit = "year"), na.rm = TRUE))) |>
+  arrange(group) |>
+  knitr::kable()
+```
 
 
