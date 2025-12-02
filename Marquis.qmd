@@ -283,4 +283,29 @@ grades_wide |>
   slice_head(n = 5) |>
   knitr::kable()
 ```
+### Question 20
+```{r}
+grades_plot <- grades_wide |>
+  select(
+    id,
+    `Hacking and Network Security`,
+    `Neurotechnology and Mind Control`
+  ) |>
+  filter(
+    !is.na(`Hacking and Network Security`) & 
+    !is.na(`Neurotechnology and Mind Control`)
+  )
+
+ggplot(grades_plot, aes(
+  x = `Neurotechnology and Mind Control`,
+  y = `Hacking and Network Security`
+)) +
+  geom_point(color = "steelblue", size = 3, alpha = 0.7) +  
+  geom_smooth(method = "lm", color = "red", se = TRUE) +     
+  labs(
+    title = "Average Grades",
+    x = "Average Grade in Neurotechnology and Mind Control",
+    y = "Average Grade in Hacking and Network Security"
+  )
+```
 
