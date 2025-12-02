@@ -3,3 +3,20 @@ title: "Marquis"
 author: "Chloé Marquis"
 format: html
 ---
+
+```{r}
+library(here)
+here::i_am("Chloé Marquis.Rproj")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(vroom)
+```
+### Question 1
+```{r}
+courses <- vroom(here("courses.csv"))
+```
+
