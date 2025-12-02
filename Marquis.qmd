@@ -204,4 +204,24 @@ grades_per_student |>
     y = "Number of grades"
   )
 ```
+### Question 15
+```{r}
+grades_with_group <- grades_with_group |>
+  left_join(
+    grades_per_student |> select(id, num_grades),
+    by = "id"
+  )
+
+corp_espionage_ds <- grades_with_group |>
+  filter(course_id == 9) |>      
+  group_by(id, group, sex) |>
+  summarise(num_grades = n(), .groups = "drop") |>
+  arrange(id)
+
+corp_espionage_ds |>
+  slice_head(n = 5) |>      
+  knitr::kable()
+```
+
+### Question 16
 
