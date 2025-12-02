@@ -89,6 +89,7 @@ students |>
     fill = "Sex"
 )
 ```
+The number of women and men in each groups appears to be evenly distributed.
 
 ### Question 7
 ```{r}
@@ -102,6 +103,7 @@ students |>
       y = "Number of students"
     )
 ```
+Most students are between 20 and 25, few are older. 
 
 ### Question 8
 ```{r}
@@ -156,6 +158,7 @@ ggplot(avg_bio, aes(x = factor(group), y = avg_grade)) +
     y = "Average grade"
   )
 ```
+There is not much deviations in average grades for this course. 
 
 ### Question 12
 ```{r}
@@ -175,6 +178,7 @@ ggplot(grades_per_trimester, aes(x = grade, color = factor(trimester), fill = fa
     fill = "Trimester"
   )
 ```
+We can see that grades for trimester 2 are lower. While grades for trimesters one and three more similar on average. Grades for trimester 1 are more concentrated around the mean while there is more variation for the third trimester. 
 
 ### Question 13
 ```{r}
@@ -209,6 +213,7 @@ grades_per_student |>
     y = "Number of grades"
   )
 ```
+The number of grades is the same between women and men. 
 
 ### Question 15
 ```{r}
@@ -242,6 +247,7 @@ corp_espionage_ds |>
     y = "Number of Students"
   )
 ```
+There are a lot more students with 10 grades than any other number of grades. Only a few with 8 or 9 grades. 
 
 ### Question 17
 ```{r}
@@ -253,6 +259,7 @@ ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades)) +
     y = "Number of grades"
   )
 ```
+The distribution of the number of grades ranges between 9 and 10 grades, with a lot of groups having 0 grades. 
 
 ### Question 18
 ```{r}
@@ -265,6 +272,7 @@ ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades, fill = sex)) +
     fill = "Sex"
   )
 ```
+The distribution of the number of grades is very similar between women and men.
 
 ### Question 19
 ```{r}
@@ -314,6 +322,7 @@ ggplot(grades_plot, aes(
     y = "Average Grade in Hacking and Network Security"
   )
 ```
+The average grade in hacking is concentrated around 13.5 and doesn't not seem positively or negatively correlated with grades in neurotechnology.
 
 ### Question 21
 ```{r}
@@ -408,28 +417,39 @@ We can observe here the variations within groups also including the effect of se
 
 ### Question 26
 ```{r}
-courses_trimester <- courses |> select(`course name`, trimester)
-
-# Create a vector of courses per trimester
-trim1_courses <- intersect(courses$`course name`[courses$trimester == 1], colnames(grades_wide))
-trim2_courses <- intersect(courses$`course name`[courses$trimester == 2], colnames(grades_wide))
-trim3_courses <- intersect(courses$`course name`[courses$trimester == 3], colnames(grades_wide))
-
-# Compute pass/fail
-pass_df <- grades_wide |>
+grades_wide <- grades_wide |>
   rowwise() |>
-  mutate(
-    final_grade = mean(c_across(-c(id, group)), na.rm = TRUE),
-    pass = min(c_across(-c(id, group)), na.rm = TRUE) >= 5 &          
-           mean(c_across(any_of(trim1_courses)), na.rm = TRUE) >= 10 &    
-           mean(c_across(any_of(trim2_courses)), na.rm = TRUE) >= 10 &    
-           mean(c_across(any_of(trim3_courses)), na.rm = TRUE) >= 10        
+  mutate(final_grade = mean(c_across(-c(id, group)), na.rm = TRUE)) |>
+  ungroup()
+
+grades_long <- grades_wide |>
+  pivot_longer(
+    cols = -c(id, group, final_grade),
+    names_to = "course_name",
+    values_to = "avg_grade"
+  )
+
+grades_long <- grades_long |>
+  left_join(courses |> select(`course name`, trimester),
+            by = c("course_name" = "course name"))
+
+trimester_avg <- grades_long |>
+  group_by(id, trimester) |>
+  summarise(trimester_avg = mean(avg_grade, na.rm = TRUE), .groups = "drop")
+
+pass_df <- grades_long |>
+  group_by(id, group, final_grade) |>
+  summarise(min_course = min(avg_grade, na.rm = TRUE), .groups = "drop") |>
+  left_join(
+    trimester_avg |> group_by(id) |> summarise(min_trimester = min(trimester_avg), .groups = "drop"),
+    by = "id"
   ) |>
-  ungroup() |>
+  mutate(pass = min_course >= 5 & min_trimester >= 10) |>
   select(id, group, final_grade, pass) |>
   arrange(desc(final_grade))
 
-pass_df |> slice_head(n = 25) |> knitr::kable()
+pass_df |> slice_head(n = 10) |> knitr::kable()
+
 
 ```
 This is wrong but I'll still use it for the next questions. 
@@ -444,3 +464,68 @@ num_fail_high <- nrow(students_fail_high)
 
 cat("The number of students who do not pass yet have a final grade >= 10 is", num_fail_high, ".\n")
 
+
+### Question 28
+```{r}
+pass_rate_group <- pass_df |>
+  group_by(group) |>
+  summarise(
+    total_students = n(),
+    passed = sum(pass),
+    pass_rate = passed / total_students,
+    .groups = "drop"
+  )
+
+ggplot(pass_rate_group, aes(x = factor(group), y = pass_rate)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Pass Rate per Group",
+    x = "Group",
+    y = "Pass Rate"
+  )
+```
+
+### Question 29
+```{r}
+grades_below_5 <- grades_long |>
+  filter(avg_grade < 5)
+
+course_failures <- grades_below_5 |>
+  group_by(course_name) |>
+  summarise(num_failures = n(), .groups = "drop") |>
+  arrange(desc(num_failures))
+
+course_failures |> slice_head(n = 1) |> knitr::kable()
+
+```
+
+### Question 30
+```{r}
+students_age <- students |>
+  mutate(age = round(time_length(today() - birth_date, unit = "year")))
+
+pass_age <- pass_df |>
+  left_join(students_age |> select(id, age), by = "id")
+
+success_rate_age <- pass_age |>
+  group_by(age) |>
+  summarise(
+    total = n(),
+    passed = sum(pass),
+    success_rate = passed / total,
+    .groups = "drop"
+  )
+
+ggplot(success_rate_age, aes(x = age, y = success_rate)) +
+  geom_col(fill = "steelblue") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Student Success Rate by Age",
+    x = "Age",
+    y = "Success Rate (%)"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
+This is still impacted by question 26, and is therefore not interpretable. 
