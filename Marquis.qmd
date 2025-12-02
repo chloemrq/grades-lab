@@ -96,14 +96,30 @@ students |>
       y = "Number of students"
     )
 ```
+
 ### Question 8
 ```{r}
+
+# adding an age column
+students <- students |>
+  mutate(age = round(time_length(today() - birth_date, unit = "year")))
+
 students |>
   group_by(group) |>
   summarise(
-    median_age = round(median(time_length(today() - birth_date, unit = "year"), na.rm = TRUE))) |>
+    median_age = round(median(age, na.rm = TRUE))) |>
   arrange(group) |>
   knitr::kable()
 ```
 
+
+### Question 9
+```{r}
+students |>
+  group_by(group) |>
+  slice_max(age, n=1, with_ties = FALSE) |>
+  select(id, sex, age) |>
+  arrange(desc(age)) |>
+  knitr::kable()
+```
 
