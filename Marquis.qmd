@@ -156,6 +156,7 @@ ggplot(avg_bio, aes(x = factor(group), y = avg_grade)) +
     y = "Average grade"
   )
 ```
+
 ### Question 12
 ```{r}
 # need to join courses and grades to get the grades per trimester 
@@ -174,6 +175,7 @@ ggplot(grades_per_trimester, aes(x = grade, color = factor(trimester), fill = fa
     fill = "Trimester"
   )
 ```
+
 ### Question 13
 ```{r}
 grades_per_student <- grades |>
@@ -207,6 +209,7 @@ grades_per_student |>
     y = "Number of grades"
   )
 ```
+
 ### Question 15
 ```{r}
 grades_with_group <- grades_with_group |>
@@ -239,6 +242,7 @@ corp_espionage_ds |>
     y = "Number of Students"
   )
 ```
+
 ### Question 17
 ```{r}
 ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades)) +
@@ -249,6 +253,7 @@ ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades)) +
     y = "Number of grades"
   )
 ```
+
 ### Question 18
 ```{r}
 ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades, fill = sex)) +
@@ -283,6 +288,7 @@ grades_wide |>
   slice_head(n = 5) |>
   knitr::kable()
 ```
+
 ### Question 20
 ```{r}
 grades_plot <- grades_wide |>
@@ -308,6 +314,7 @@ ggplot(grades_plot, aes(
     y = "Average Grade in Hacking and Network Security"
   )
 ```
+
 ### Question 21
 ```{r}
 grades_corr <- grades_wide |>
@@ -335,6 +342,7 @@ correlation_by_group <- grades_corr |>
 correlation_by_group |>
   knitr::kable()
 ```
+
 ### Question 22
 ```{r}
 target_group <- correlation_by_group |>
@@ -396,6 +404,6 @@ ggplot(final_grades, aes(x = factor(group), y = final_grade, fill = sex)) +
     fill = "Sex"
   )
 ```
-We can observe here the variations within groups also including the effect of sex. There is little variation between women and men within groups and between groups. We do not oberve a general trend of women socring always higher than men or the reverse. 
+We can observe here the variations within groups also including the effect of sex. There is little variation between women and men within groups and between groups. We do not observe a general trend of women scoring always higher than men or the reverse. 
 
 
