@@ -359,3 +359,17 @@ ggplot(grades_target_group, aes(
 There is a negative correlation between the two variables. A lower grade in Darknet culture seems to be associated with a higher grade in artificial intelligence for group 11 (the group for which the grades are the most correlated).
 
 
+### Question 23
+```{r}
+final_grades <- grades_wide |>
+  mutate(final_grade = rowMeans(across(-c(id, group)), na.rm = TRUE)) |>
+  left_join(students |> select(id, sex), by = "id") |>
+  select(id, group, sex, final_grade) |>
+  arrange(desc(final_grade))
+
+final_grades |> 
+  slice_head(n = 5) |>
+  knitr::kable()
+```
+
+
