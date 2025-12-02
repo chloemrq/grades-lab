@@ -14,6 +14,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(vroom)
+library(lubridate)
 ```
 ### Question 1
 ```{r}
@@ -82,4 +83,18 @@ students |>
     fill = "Sex"
 )
 ```
+
+### Question 7
+```{r}
+students |>
+  mutate(age = time_length(today() - birth_date, unit = "year")) |>
+    ggplot(aes(x = age)) +
+    geom_histogram(binwidth=1) +       
+    labs(
+      title = "Age distribution",
+      x = "Age",
+      y = "Number of students"
+    )
+```
+
 
