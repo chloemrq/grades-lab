@@ -384,3 +384,18 @@ ggplot(final_grades, aes(x = factor(group), y = final_grade)) +
 ```
 The overall average final grade is around 11. There is a little variation between groups with the highest average final grade being around 12.3 (group 13) and the lowest being around 10.7 (group 19). Overall, the results are pretty homogneous within and between groups. 
 
+
+### Question 25
+```{r}
+ggplot(final_grades, aes(x = factor(group), y = final_grade, fill = sex)) +
+  geom_boxplot(position = position_dodge(width = 0.8)) +
+  labs(
+    title = "Final Grades by Group and Sex",
+    x = "Group",
+    y = "Final Grade",
+    fill = "Sex"
+  )
+```
+We can observe here the variations within groups also including the effect of sex. There is little variation between women and men within groups and between groups. We do not oberve a general trend of women socring always higher than men or the reverse. 
+
+
