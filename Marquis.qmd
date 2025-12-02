@@ -33,5 +33,19 @@ courses |>
   arrange(`course name`) |>
   knitr::kable()
 ```
+### Question 3
+```{r}
+students <- vroom("students.csv",
+                   col_types = vroom::cols(
+                     id = vroom::col_integer(),
+                     group = vroom::col_factor(),
+                     birth_date = vroom::col_date(format = "%Y-%m-%d"),
+                     sex = vroom::col_factor(levels = c("F", "M"))
+                     )
+)
+
+# check 
+sapply(students, class) # OK
+```
 
 
