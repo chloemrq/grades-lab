@@ -308,4 +308,29 @@ ggplot(grades_plot, aes(
     y = "Average Grade in Hacking and Network Security"
   )
 ```
+### Question 21
+```{r}
+grades_corr <- grades_wide |>
+  select(
+    group,
+    `Darknet Culture and Subversive Technologies`,
+    `Artificial Intelligence and Machine Learning`
+  ) |>
+  filter(
+    !is.na(`Darknet Culture and Subversive Technologies`) &
+    !is.na(`Artificial Intelligence and Machine Learning`)
+  )
+
+grades_corr |>
+  group_by(group) |>
+  summarise(
+    correlation = cor(
+      `Darknet Culture and Subversive Technologies`,
+      `Artificial Intelligence and Machine Learning`
+    ),
+    .groups = "drop"
+  ) |>
+  arrange(group) |>
+  knitr::kable()
+```
 
