@@ -123,3 +123,8 @@ students |>
   knitr::kable()
 ```
 
+### Question 10
+```{r}
+num_grades <- sum(!is.na(grades$grade))
+```
+The data set contains `r num_grades` grades.
