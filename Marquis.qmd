@@ -128,3 +128,27 @@ students |>
 num_grades <- sum(!is.na(grades$grade))
 ```
 The data set contains `r num_grades` grades.
+
+### Question 11
+```{r}
+# first merge the grades and students dataset to have grades and group in the same data set 
+grades_with_group <- grades |>
+  left_join(students, by = "id")
+
+avg_bio <- grades_with_group |>
+  filter(course_id == 3) |>  # code for this course is 3 (from the courses data set)
+  group_by(group) |>
+  summarise(
+    avg_grade = mean(grade, na.rm = TRUE)  
+  )
+
+ggplot(avg_bio, aes(x = factor(group), y = avg_grade)) +
+  geom_col() +  
+  labs(
+    title = "Average grade in Bioengineering and Genetic Modification",
+    x = "Group",
+    y = "Average grade"
+  )
+```
+
+
