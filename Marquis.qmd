@@ -321,7 +321,7 @@ grades_corr <- grades_wide |>
     !is.na(`Artificial Intelligence and Machine Learning`)
   )
 
-grades_corr |>
+correlation_by_group <- grades_corr |>
   group_by(group) |>
   summarise(
     correlation = cor(
@@ -330,7 +330,32 @@ grades_corr |>
     ),
     .groups = "drop"
   ) |>
-  arrange(group) |>
+  arrange(group) 
+
+correlation_by_group |>
   knitr::kable()
 ```
+### Question 22
+```{r}
+target_group <- correlation_by_group |>
+  slice_max(abs(correlation), n = 1) |>
+  pull(group)
+
+grades_target_group <- grades_corr |>
+  filter(group == target_group)
+
+ggplot(grades_target_group, aes(
+  x = `Artificial Intelligence and Machine Learning`,
+  y = `Darknet Culture and Subversive Technologies`
+)) +
+  geom_point(color = "steelblue", size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    title = paste("Grades in Darknet Culture vs AI/ML — Group", target_group),
+    x = "Average Grade in Artificial Intelligence and Machine Learning",
+    y = "Average Grade in Darknet Culture and Subversive Technologies"
+  )
+```
+There is a negative correlation between the two variables. A lower grade in Darknet culture seems to be associated with a higher grade in artificial intelligence for group 11 (the group for which the grades are the most correlated).
+
 
