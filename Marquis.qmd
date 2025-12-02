@@ -250,3 +250,14 @@ ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades)) +
   )
 ```
 ### Question 18
+```{r}
+ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades, fill = sex)) +
+  geom_boxplot(position = position_dodge(width = 0.8)) +  
+  labs(
+    title = "Number of Grades per Student by Group and Sex",
+    x = "Group",
+    y = "Number of Grades",
+    fill = "Sex"
+  )
+```
+
