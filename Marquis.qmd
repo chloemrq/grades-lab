@@ -69,3 +69,17 @@ students |>
 )
 ```
 
+### Question 6
+```{r}
+students |>
+  count(group, sex) |>              
+  ggplot(aes(x = group, y = n, fill= sex)) +
+  geom_col() +
+  labs(
+    title = "Number of students per group",
+    x = "Group",
+    y = "Number of students",
+    fill = "Sex"
+)
+```
+
