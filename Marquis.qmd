@@ -4,6 +4,9 @@ author: "Chloé Marquis"
 format: html
 ---
 
+Link to my github repository : https://github.com/chloemrq/grades-lab
+
+
 ```{r}
 library(here)
 here::i_am("Chloé Marquis.Rproj")
@@ -148,6 +151,24 @@ ggplot(avg_bio, aes(x = factor(group), y = avg_grade)) +
     title = "Average grade in Bioengineering and Genetic Modification",
     x = "Group",
     y = "Average grade"
+  )
+```
+### Question 12
+```{r}
+# need to join courses and grades to get the grades per trimester 
+grades_per_trimester <- grades |>
+  left_join(courses |> select(identifier, trimester), 
+            by = c("course_id" = "identifier"))
+
+
+ggplot(grades_per_trimester, aes(x = grade, color = factor(trimester), fill = factor(trimester))) +
+  geom_density(alpha=0.3) +
+  labs(
+    title = "Density plot of grades per trimester",
+    x = "Grade",
+    y = "Density",
+    color = "Trimester",
+    fill = "Trimester"
   )
 ```
 
