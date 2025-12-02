@@ -1,7 +1,10 @@
 ---
 title: "Marquis"
 author: "Chloé Marquis"
-format: html
+format: 
+  html: default
+  pdf: default
+
 ---
 
 Link to my github repository : https://github.com/chloemrq/grades-lab
@@ -237,3 +240,13 @@ corp_espionage_ds |>
   )
 ```
 ### Question 17
+```{r}
+ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades)) +
+  geom_boxplot() +
+  labs(
+    title = "Number of grades per student by Group Corporate Espionage and Industrial Sabotage",
+    x = "Group",
+    y = "Number of grades"
+  )
+```
+### Question 18
