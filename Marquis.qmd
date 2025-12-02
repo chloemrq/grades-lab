@@ -372,4 +372,15 @@ final_grades |>
   knitr::kable()
 ```
 
+### Question 24
+```{r}
+ggplot(final_grades, aes(x = factor(group), y = final_grade)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Final Grades by Group",
+    x = "Group",
+    y = "Final Grade"
+  )
+```
+The overall average final grade is around 11. There is a little variation between groups with the highest average final grade being around 12.3 (group 13) and the lowest being around 10.7 (group 19). Overall, the results are pretty homogneous within and between groups. 
 
