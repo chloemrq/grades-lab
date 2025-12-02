@@ -224,4 +224,16 @@ corp_espionage_ds |>
 ```
 
 ### Question 16
-
+```{r}
+corp_espionage_ds |>
+  count(num_grades) |>  
+  arrange(num_grades) |>
+  ggplot(aes(x = factor(num_grades), y = n)) +
+  geom_col() +   
+  labs(
+    title = "Distribution of Number of Grades per Student in Corporate Espionage and Industrial Sabotage",
+    x = "Number of Grades",
+    y = "Number of Students"
+  )
+```
+### Question 17
