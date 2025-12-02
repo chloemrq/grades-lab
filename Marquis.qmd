@@ -49,3 +49,11 @@ sapply(students, class) # OK
 ```
 
 
+### Question 4
+```{r}
+grades <- vroom(
+  here("grades.csv"), 
+  delim = ":",
+  na = "unknown")
+```
+
