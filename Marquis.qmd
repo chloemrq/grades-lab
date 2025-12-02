@@ -56,4 +56,16 @@ grades <- vroom(
   delim = ":",
   na = "unknown")
 ```
+### Question 5
+```{r}
+students |>
+  count(group) |>              
+  ggplot(aes(x = group, y = n)) +
+  geom_col() +
+  labs(
+    title = "Number of students per group",
+    x = "Group",
+    y = "Number of students"
+)
+```
 
