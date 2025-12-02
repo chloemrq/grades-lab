@@ -887,6 +887,97 @@ dbl (3): id, course_id, grade
 </section>
 <section id="question-18" class="level3">
 <h3 class="anchored" data-anchor-id="question-18">Question 18</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(corp_espionage_ds, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(group), <span class="at">y =</span> num_grades, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>)) <span class="sc">+</span>  </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of Grades per Student by Group and Sex"</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Group"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Grades"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sex"</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Marquis_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-19" class="level3">
+<h3 class="anchored" data-anchor-id="question-19">Question 19</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>avg_grades <span class="ot">&lt;-</span> grades <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id, course_id) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_grade =</span> <span class="fu">round</span>(<span class="fu">mean</span>(grade, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(courses <span class="sc">|&gt;</span> <span class="fu">select</span>(identifier, <span class="st">`</span><span class="at">course name</span><span class="st">`</span>), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"course_id"</span> <span class="ot">=</span> <span class="st">"identifier"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(students <span class="sc">|&gt;</span> <span class="fu">select</span>(id, group), <span class="at">by =</span> <span class="st">"id"</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>grades_wide <span class="ot">&lt;-</span> avg_grades <span class="sc">|&gt;</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, group, <span class="st">`</span><span class="at">course name</span><span class="st">`</span>, avg_grade) <span class="sc">|&gt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> <span class="st">`</span><span class="at">course name</span><span class="st">`</span>,</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> avg_grade</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>grades_wide <span class="sc">|&gt;</span> </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, group, </span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Artificial Intelligence and Machine Learning</span><span class="st">`</span>,</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bioengineering and Genetic Modification</span><span class="st">`</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 47%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">id</th>
+<th style="text-align: left;">group</th>
+<th style="text-align: right;">Artificial Intelligence and Machine Learning</th>
+<th style="text-align: right;">Bioengineering and Genetic Modification</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">12.79</td>
+<td style="text-align: right;">13.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">16</td>
+<td style="text-align: right;">13.19</td>
+<td style="text-align: right;">11.38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">12.64</td>
+<td style="text-align: right;">12.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">12.88</td>
+<td style="text-align: right;">10.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">8</td>
+<td style="text-align: right;">14.31</td>
+<td style="text-align: right;">11.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
 </main>

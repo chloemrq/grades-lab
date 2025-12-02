@@ -261,3 +261,26 @@ ggplot(corp_espionage_ds, aes(x = factor(group), y = num_grades, fill = sex)) +
   )
 ```
 
+### Question 19
+```{r}
+avg_grades <- grades |>
+  group_by(id, course_id) |>
+  summarise(avg_grade = round(mean(grade, na.rm = TRUE), 2), .groups = "drop") |>
+  left_join(courses |> select(identifier, `course name`), by = c("course_id" = "identifier")) |>
+  left_join(students |> select(id, group), by = "id")
+
+grades_wide <- avg_grades |>
+  select(id, group, `course name`, avg_grade) |>
+  pivot_wider(
+    names_from = `course name`,
+    values_from = avg_grade
+  )
+
+grades_wide |> 
+  select(id, group, 
+         `Artificial Intelligence and Machine Learning`,
+         `Bioengineering and Genetic Modification`) |>
+  slice_head(n = 5) |>
+  knitr::kable()
+```
+
